@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Indonesia",
+    "alpha2Code": "ID",
+    "alpha3Code": "IDN",
+    "capital": "Jakarta",
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "population": 258705000,
+    "demonym": "Indonesian",
+    "area": 1904569,
+    "gini": 34,
+    "flag": "https://restcountries.eu/data/idn.svg",
+    "cioc": "INA"
+  }
+]
