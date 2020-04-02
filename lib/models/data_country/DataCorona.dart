@@ -1,22 +1,23 @@
 /*
  * corona
- * Province.dart
- * Created by Cong Fandi on 15/3/2020
+ * DataCorona.dart
+ * Created by Cong Fandi on 31/3/2020
  * email : congfandi@gmail.com
  * Copyright © 2020 Cong Fandi. All rights reserved.
  *
  */
 
-import 'Attributes.dart';
 
-class Province {
-    Attributes attributes;
+import 'DataCountry.dart';
 
-    Province({this.attributes});
+class DataCorona {
+    DataCountry attributes;
 
-    factory Province.fromJson(Map<String, dynamic> json) {
-        return Province(
-            attributes: json['attributes'] != null ? Attributes.fromJson(json['attributes']) : null, 
+    DataCorona({this.attributes});
+
+    factory DataCorona.fromJson(Map<String, dynamic> json) {
+        return DataCorona(
+            attributes: json['attributes'] != null ? DataCountry.fromJson(json['attributes']) : null, 
         );
     }
 

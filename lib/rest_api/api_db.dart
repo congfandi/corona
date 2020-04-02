@@ -18,4 +18,9 @@ class ApiDb {
   static String getFlag(String countryName) {
     return "https://restcountries.eu/rest/v2/name/$countryName";
   }
+
+  static const String ALL_COUNTRY = "https://api.kawalcorona.com/negara";
+  static const String ALL_INDO_PROVINCE =
+      "https://api.kawalcorona.com/indonesia/provinsi/";
+  static String INDONESIA = "https://api.kawalcorona.com/indonesia";
 }

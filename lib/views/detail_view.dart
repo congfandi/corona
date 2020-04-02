@@ -8,25 +8,18 @@
  */
 
 import 'package:corona/app/app_theme.dart';
-import 'package:corona/helper/contry_to_code.dart';
 import 'package:corona/helper/convert_price.dart';
-import 'package:corona/models/detail_viruses/Province.dart';
-import 'package:corona/models/viruses/Virus.dart';
+import 'package:corona/models/data_province/data_province.dart';
 import 'package:corona/providers/detail_state.dart';
-import 'package:corona/providers/home_state.dart';
+import 'package:corona/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DetailView extends StatelessWidget {
-  final HomeState _homeState;
-  final Virus _virus;
-
-  DetailView(this._homeState, this._virus);
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => DetailState(_homeState, _virus),
+      create: (_) => DetailState(),
       child: Consumer<DetailState>(builder: (context, hs, _) {
         return Scaffold(
           body: _backGround(context, hs),
@@ -52,29 +45,18 @@ class DetailView extends StatelessWidget {
           ),
           _body(context, hs),
           Positioned(
-              top: 36,
-              left: 16,
-              child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: AppTheme.colors['putih'],
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  })),
-          Positioned(
-              top: 36,
-              right: 16,
-              child: IconButton(
-                  icon: Icon(
-                    Icons.remove_red_eye,
-                    color: AppTheme.colors[
-                        _homeState.pinnedVirus == _virus ? 'putih' : 'abu_abu'],
-                  ),
-                  onPressed: () {
-                    _homeState.setPinnedVirus(_virus);
-                    hs.updateWidget();
-                  })),
+            top: 36,
+            left: 16,
+            child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: AppTheme.colors['putih'],
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (c) => HomeView()));
+                }),
+          ),
         ],
       ),
     );
@@ -82,14 +64,11 @@ class DetailView extends StatelessWidget {
 
   _body(BuildContext context, DetailState hs) {
     return RefreshIndicator(
-      onRefresh: () {
-        hs.getDetail();
-        return;
-      },
+      onRefresh: () => hs.getDetail(),
       child: Column(
         children: <Widget>[
           _header(context, hs),
-          hs.loadingDetail
+          hs.loadProvince
               ? Container(
                   child: Center(
                     child: CircularProgressIndicator(),
@@ -105,9 +84,10 @@ class DetailView extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   height: MediaQuery.of(context).size.height - 250,
                   child: ListView.builder(
-                    itemBuilder: (c, i) =>
-                        i == 0 ? _title() : _item(hs.listProvince[i - 1], hs),
-                    itemCount: hs.listProvince.length + 1,
+                    itemBuilder: (c, i) => i == 0
+                        ? _title()
+                        : _item(hs.listCorona[i - 1].dataProvince, hs),
+                    itemCount: hs.listCorona.length + 1,
                   ),
                 )
         ],
@@ -124,7 +104,7 @@ class DetailView extends StatelessWidget {
           children: <Widget>[
             Padding(padding: EdgeInsets.only(top: 32)),
             Text(
-              _virus.attributes.country_Region.toUpperCase(),
+              'INDONESIA',
               style: TextStyle(
                   color: AppTheme.colors['putih'],
                   fontWeight: FontWeight.bold,
@@ -134,7 +114,9 @@ class DetailView extends StatelessWidget {
               onPressed: null,
               borderSide: BorderSide(width: 4),
               child: Text(
-                "${ConvertPrice(_virus.attributes.confirmed).getIdr()} Kasus",
+                hs.loadIndonesia
+                    ? "loading.."
+                    : "${hs.indonesia.positif} Kasus",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15,
@@ -163,7 +145,9 @@ class DetailView extends StatelessWidget {
                       ),
                       Padding(padding: EdgeInsets.only(left: 8)),
                       Text(
-                        "Sembuh : ${ConvertPrice(_virus.attributes.recovered).getIdr()}",
+                        hs.loadIndonesia
+                            ? "loading..."
+                            : "Sembuh : ${hs.indonesia.sembuh}",
                         style: TextStyle(
                             color: AppTheme.colors['putih'],
                             fontWeight: FontWeight.bold,
@@ -183,7 +167,9 @@ class DetailView extends StatelessWidget {
                       ),
                       Padding(padding: EdgeInsets.only(left: 8)),
                       Text(
-                        "Meninggal : ${ConvertPrice(_virus.attributes.deaths).getIdr()}",
+                        hs.loadIndonesia
+                            ? "loading..."
+                            : "Meninggal : ${hs.indonesia.meninggal}",
                         style: TextStyle(
                             color: AppTheme.colors['putih'],
                             fontWeight: FontWeight.bold,
@@ -211,7 +197,7 @@ class DetailView extends StatelessWidget {
         ));
   }
 
-  _item(Province virus, DetailState hs) {
+  _item(DataProvince dataProvince, DetailState hs) {
     return Container(
       decoration: BoxDecoration(
           color: AppTheme.colors['biru_box'],
@@ -224,22 +210,21 @@ class DetailView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image.network(
-              'https://www.countryflags.io/${new CountryToCode(virus.attributes.country_Region).getCode().toLowerCase()}/flat/64.png'),
+          Image.network('https://www.countryflags.io/id/flat/64.png'),
           Padding(padding: EdgeInsets.only(left: 16)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  virus.attributes.province_State ?? "Provinsi tidak diketahui",
+                  dataProvince.provinsi ?? "Provinsi tidak diketahui",
                   style: TextStyle(
                       fontSize: 17,
                       color: AppTheme.colors['putih'],
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "${ConvertPrice(virus.attributes.confirmed).getIdr()} Kasus",
+                  "${ConvertPrice(dataProvince.kasusPosi).getIdr()} Kasus",
                   style: TextStyle(
                       fontSize: 12,
                       color: AppTheme.colors['putih'],

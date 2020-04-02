@@ -8,72 +8,47 @@
  */
 
 import 'package:corona/helper/db_helper.dart';
-import 'package:corona/models/detail_viruses/DetailResponse.dart';
-import 'package:corona/models/flag/FlagResponse.dart';
-import 'package:corona/models/viruses/VirusResponse.dart';
-import 'package:corona/models/viruses/Virus.dart';
+import 'package:corona/models/data_country/AllCountryResponse.dart';
+import 'package:corona/models/data_country/DataCorona.dart';
+import 'package:corona/models/data_country/DataCountry.dart';
 import 'package:corona/rest_api/api_client.dart';
 import 'package:corona/rest_api/api_db.dart';
 import 'package:flutter/material.dart';
 
 class HomeState with ChangeNotifier {
   bool loadingVirus = true;
-  Virus pinnedVirus;
+  DataCountry pinnedCountry;
+  final ApiClient _apiClient = new ApiClient();
 
   HomeState() {
-    getListVirus();
+    getAllCountry();
   }
 
-  List<Virus> listVirus = new List();
-  DetailResponse provinceResponse;
+  List<DataCorona> listCoronaByCountry = new List();
 
-  getListVirus() async {
-    await DbHelper().getCountry().then((objectId) {
-      loadingVirus = true;
-      notifyListeners();
-      new ApiClient(ApiDb.GET_VIRUS_BY_COUNTRY)
-          .get((status, message, jsonResponse) {
-        if (status) {
-          VirusResponse virusResponse = VirusResponse.fromJson(jsonResponse);
-          listVirus = virusResponse.viruses;
-          listVirus.forEach((virus) {
-            if (virus.attributes.oBJECTID == objectId) pinnedVirus = virus;
-          });
-          loadingVirus = false;
-          notifyListeners();
-        }
-        return;
-      });
-      return;
-    });
-  }
-
-  setPinnedVirus(Virus virus) {
-    this.pinnedVirus = virus;
-    DbHelper().saveCountry(virus.attributes.oBJECTID);
-    notifyListeners();
-  }
-
-  getDetail(String country) {
-    new ApiClient(ApiDb.detail(country)).get((status, message, jsonResponse) {
+  Future<List<DataCorona>> getAllCountry() async {
+    _apiClient.getFromKawal(ApiDb.ALL_COUNTRY, (status, message, jsonResponse) {
       if (status) {
-        getFlag(country, (flag) {
-          provinceResponse = DetailResponse.fromJson(jsonResponse);
-          provinceResponse.countryFlag = flag;
-          return;
+        AllCountryResponse _response =
+            AllCountryResponse.fromJson(jsonResponse);
+        this.listCoronaByCountry = _response.dataCorona;
+        loadingVirus = false;
+        listCoronaByCountry.forEach((data) {
+          DbHelper().getCountry().then((code) {
+            if (code == data.attributes.objectId)
+              setPinnedVirus(data.attributes);
+          });
         });
       }
+      notifyListeners();
       return;
     });
+    return listCoronaByCountry;
   }
 
-  getFlag(String country, ValueChanged callback(String flagUrl)) {
-    new ApiClient(ApiDb.getFlag(country)).get((status, message, jsonResponse) {
-      if (status) {
-        FlagResponse flagResponse = FlagResponse.fromJson(jsonResponse);
-        callback(flagResponse.flag);
-      }
-      return;
-    });
+  setPinnedVirus(DataCountry dataCountry) {
+    this.pinnedCountry = dataCountry;
+    DbHelper().saveCountry(dataCountry.objectId);
+    notifyListeners();
   }
 }

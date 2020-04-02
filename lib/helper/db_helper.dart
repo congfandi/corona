@@ -17,7 +17,7 @@ class DbHelper {
 
   Future<int> getCountry() async {
     var ref = await SharedPreferences.getInstance();
-    var data = ref.getInt('country') ?? 53;
+    var data = ref.getInt('country') ?? 88;
     return data;
   }
 }

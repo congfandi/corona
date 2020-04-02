@@ -8,6 +8,7 @@
  */
 
 import 'package:corona/app/app_theme.dart';
+import 'package:corona/views/detail_view.dart';
 import 'package:corona/views/home_view.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class App extends StatelessWidget {
         // is not restarted.
         primarySwatch: AppTheme.colors['merah'],
       ),
-      home: HomeView(),
+      home: DetailView(),
     );
   }
 }

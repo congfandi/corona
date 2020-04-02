@@ -7,37 +7,48 @@
  *
  */
 
-import 'package:corona/models/detail_viruses/DetailResponse.dart';
-import 'package:corona/models/detail_viruses/Province.dart';
-import 'package:corona/models/viruses/Virus.dart';
-import 'package:corona/providers/home_state.dart';
+import 'package:corona/models/data_province/data_province.dart';
+import 'package:corona/models/indonesia_response.dart';
 import 'package:corona/rest_api/api_client.dart';
 import 'package:corona/rest_api/api_db.dart';
 import 'package:flutter/material.dart';
 
 class DetailState with ChangeNotifier {
-  final HomeState _homeState;
-  final Virus _virus;
-  bool loadingDetail = true;
-  List<Province> listProvince = new List();
+  bool loadProvince = true;
+  bool loadIndonesia = true;
+  Indonesia indonesia;
+  List<DataCorona> listCorona = new List();
+  final ApiClient _apiClient = new ApiClient();
 
-  DetailState(this._homeState, this._virus) {
+  DetailState() {
     getDetail();
   }
 
-  updateWidget(){
-    notifyListeners();
-  }
-  getDetail() async {
-    await new ApiClient(ApiDb.detail(_virus.attributes.country_Region))
-        .get((status, message, jsonResponse) {
+  getDataCountry() {
+    _apiClient.getFromKawal(ApiDb.INDONESIA, (status, message, jsonResponse) {
       if (status) {
-        DetailResponse detailResponse = DetailResponse.fromJson(jsonResponse);
-        listProvince = detailResponse.provinces;
+        IndonesiaResponse response = IndonesiaResponse.fromJson(jsonResponse);
+        indonesia = response.indonesia[0];
       }
-      loadingDetail = false;
+      loadIndonesia = false;
       notifyListeners();
       return;
     });
+  }
+
+  Future<List<DataCorona>> getDetail() async {
+    getDataCountry();
+    _apiClient.getFromKawal(ApiDb.ALL_INDO_PROVINCE,
+        (status, message, jsonResponse) {
+      if (status) {
+        AllProvinceResponse provinceResponse =
+            AllProvinceResponse.fromJson(jsonResponse);
+        this.listCorona = provinceResponse.dataCorona;
+      }
+      loadProvince = false;
+      notifyListeners();
+      return;
+    });
+    return listCorona;
   }
 }

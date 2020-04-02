@@ -7,13 +7,11 @@
  *
  */
 
-import 'package:corona/app/app.dart';
 import 'package:corona/app/app_theme.dart';
 import 'package:corona/helper/contry_to_code.dart';
 import 'package:corona/helper/convert_price.dart';
-import 'package:corona/models/viruses/Virus.dart';
+import 'package:corona/models/data_country/DataCountry.dart';
 import 'package:corona/providers/home_state.dart';
-import 'package:corona/views/detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -60,10 +58,7 @@ class HomeView extends StatelessWidget {
 
   _body(BuildContext context, HomeState hs) {
     return RefreshIndicator(
-      onRefresh: () {
-        hs.getListVirus();
-        return;
-      },
+      onRefresh: ()=> hs.getAllCountry(),
       child: Column(
         children: <Widget>[
           _header(context, hs),
@@ -77,9 +72,11 @@ class HomeView extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             height: MediaQuery.of(context).size.height - 250,
             child: ListView.builder(
-              itemBuilder: (c, i) =>
-                  i == 0 ? _title() : _item(hs.listVirus[i - 1], hs, context),
-              itemCount: hs.listVirus.length + 1,
+              itemBuilder: (c, i) => i == 0
+                  ? _title()
+                  : _item(
+                      hs.listCoronaByCountry[i - 1].attributes, hs, context),
+              itemCount: hs.listCoronaByCountry.length + 1,
             ),
           )
         ],
@@ -96,9 +93,9 @@ class HomeView extends StatelessWidget {
           children: <Widget>[
             Padding(padding: EdgeInsets.only(top: 32)),
             Text(
-              hs.pinnedVirus == null
+              hs.pinnedCountry == null
                   ? "wait..."
-                  : hs.pinnedVirus.attributes.country_Region.toUpperCase(),
+                  : hs.pinnedCountry.countryRegion.toUpperCase(),
               style: TextStyle(
                   color: AppTheme.colors['putih'],
                   fontWeight: FontWeight.bold,
@@ -108,9 +105,9 @@ class HomeView extends StatelessWidget {
               onPressed: null,
               borderSide: BorderSide(width: 4),
               child: Text(
-                hs.pinnedVirus == null
+                hs.pinnedCountry == null
                     ? "wait.."
-                    : "${ConvertPrice(hs.pinnedVirus.attributes.confirmed).getIdr()} Kasus",
+                    : "${ConvertPrice(hs.pinnedCountry.confirmed).getIdr()} Kasus",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15,
@@ -139,9 +136,9 @@ class HomeView extends StatelessWidget {
                       ),
                       Padding(padding: EdgeInsets.only(left: 8)),
                       Text(
-                        hs.pinnedVirus == null
+                        hs.pinnedCountry == null
                             ? "loading.."
-                            : "Sembuh : ${ConvertPrice(hs.pinnedVirus.attributes.recovered).getIdr()}",
+                            : "Sembuh : ${ConvertPrice(hs.pinnedCountry.recovered).getIdr()}",
                         style: TextStyle(
                             color: AppTheme.colors['putih'],
                             fontWeight: FontWeight.bold,
@@ -161,9 +158,9 @@ class HomeView extends StatelessWidget {
                       ),
                       Padding(padding: EdgeInsets.only(left: 8)),
                       Text(
-                        hs.pinnedVirus == null
+                        hs.pinnedCountry == null
                             ? "loading.."
-                            : "Meninggal : ${ConvertPrice(hs.pinnedVirus.attributes.deaths).getIdr()}",
+                            : "Meninggal : ${ConvertPrice(hs.pinnedCountry.deaths).getIdr()}",
                         style: TextStyle(
                             color: AppTheme.colors['putih'],
                             fontWeight: FontWeight.bold,
@@ -191,11 +188,11 @@ class HomeView extends StatelessWidget {
         ));
   }
 
-  _item(Virus virus, HomeState hs, BuildContext context) {
+  _item(DataCountry country, HomeState hs, BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => DetailView(hs,virus)));
+//        Navigator.push(
+//            context, MaterialPageRoute(builder: (_) => DetailView(hs,virus)));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -210,21 +207,21 @@ class HomeView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Image.network(
-                'https://www.countryflags.io/${new CountryToCode(virus.attributes.country_Region).getCode().toLowerCase()}/flat/64.png'),
+                'https://www.countryflags.io/${new CountryToCode(country.countryRegion).getCode().toLowerCase()}/flat/64.png'),
             Padding(padding: EdgeInsets.only(left: 16)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    virus.attributes.country_Region ?? "",
+                    country.countryRegion ?? "",
                     style: TextStyle(
                         fontSize: 17,
                         color: AppTheme.colors['putih'],
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "${ConvertPrice(virus.attributes.confirmed).getIdr()} Kasus",
+                    "${ConvertPrice(country.confirmed).getIdr()} Kasus",
                     style: TextStyle(
                         fontSize: 12,
                         color: AppTheme.colors['putih'],
@@ -236,12 +233,12 @@ class HomeView extends StatelessWidget {
             IconButton(
                 icon: Icon(
                   Icons.remove_red_eye,
-                  color: hs.pinnedVirus == virus
+                  color: hs.pinnedCountry == country
                       ? AppTheme.colors['putih']
                       : AppTheme.colors['abu_abu'],
                 ),
                 onPressed: () {
-                  hs.setPinnedVirus(virus);
+                  hs.setPinnedVirus(country);
                 })
           ],
         ),
