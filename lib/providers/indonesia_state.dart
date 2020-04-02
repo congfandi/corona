@@ -1,6 +1,6 @@
 /*
  * corona
- * detail_state.dart
+ * indonesia_state.dart
  * Created by Cong Fandi on 15/3/2020
  * email : congfandi@gmail.com
  * Copyright © 2020 Cong Fandi. All rights reserved.
@@ -13,14 +13,14 @@ import 'package:corona/rest_api/api_client.dart';
 import 'package:corona/rest_api/api_db.dart';
 import 'package:flutter/material.dart';
 
-class DetailState with ChangeNotifier {
+class IndonesiaState with ChangeNotifier {
   bool loadProvince = true;
   bool loadIndonesia = true;
   Indonesia indonesia;
   List<DataCorona> listCorona = new List();
   final ApiClient _apiClient = new ApiClient();
 
-  DetailState() {
+  IndonesiaState() {
     getDetail();
   }
 

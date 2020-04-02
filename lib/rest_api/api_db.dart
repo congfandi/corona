@@ -22,5 +22,5 @@ class ApiDb {
   static const String ALL_COUNTRY = "https://api.kawalcorona.com/negara";
   static const String ALL_INDO_PROVINCE =
       "https://api.kawalcorona.com/indonesia/provinsi/";
-  static String INDONESIA = "https://api.kawalcorona.com/indonesia";
+  static const String INDONESIA = "https://api.kawalcorona.com/indonesia";
 }

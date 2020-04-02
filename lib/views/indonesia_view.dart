@@ -1,6 +1,6 @@
 /*
  * corona
- * detail_view.dart
+ * indonesia_view.dart
  * Created by Cong Fandi on 15/3/2020
  * email : congfandi@gmail.com
  * Copyright © 2020 Cong Fandi. All rights reserved.
@@ -10,25 +10,20 @@
 import 'package:corona/app/app_theme.dart';
 import 'package:corona/helper/convert_price.dart';
 import 'package:corona/models/data_province/data_province.dart';
-import 'package:corona/providers/detail_state.dart';
-import 'package:corona/views/home_view.dart';
+import 'package:corona/providers/indonesia_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DetailView extends StatelessWidget {
+class IndonesiaView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DetailState(),
-      child: Consumer<DetailState>(builder: (context, hs, _) {
-        return Scaffold(
-          body: _backGround(context, hs),
-        );
-      }),
+    final IndonesiaState indonesiaState = Provider.of<IndonesiaState>(context);
+    return Scaffold(
+      body: _backGround(context, indonesiaState),
     );
   }
 
-  _backGround(BuildContext context, DetailState hs) {
+  _backGround(BuildContext context, IndonesiaState hs) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -39,63 +34,57 @@ class DetailView extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Image.asset(
-              'assets/background.jpeg',
+              'assets/images/background.png',
               fit: BoxFit.fill,
             ),
           ),
           _body(context, hs),
-          Positioned(
-            top: 36,
-            left: 16,
-            child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: AppTheme.colors['putih'],
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (c) => HomeView()));
-                }),
-          ),
         ],
       ),
     );
   }
 
-  _body(BuildContext context, DetailState hs) {
+  _body(BuildContext context, IndonesiaState hs) {
     return RefreshIndicator(
       onRefresh: () => hs.getDetail(),
-      child: Column(
-        children: <Widget>[
-          _header(context, hs),
-          hs.loadProvince
-              ? Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : Container(
-                  margin: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                      color: AppTheme.colors['putih'],
-                      border: Border.all(
-                        color: AppTheme.colors['putih'],
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  height: MediaQuery.of(context).size.height - 250,
-                  child: ListView.builder(
-                    itemBuilder: (c, i) => i == 0
-                        ? _title()
-                        : _item(hs.listCorona[i - 1].dataProvince, hs),
-                    itemCount: hs.listCorona.length + 1,
-                  ),
-                )
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: Column(
+              children: <Widget>[
+                _header(context, hs),
+                hs.loadProvince
+                    ? Container(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Container(
+                        margin: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            color: AppTheme.colors['putih'],
+                            border: Border.all(
+                              color: AppTheme.colors['putih'],
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        height: MediaQuery.of(context).size.height - 300,
+                        child: ListView.builder(
+                          itemBuilder: (c, i) => i == 0
+                              ? _title()
+                              : _item(hs.listCorona[i - 1].dataProvince, hs),
+                          itemCount: hs.listCorona.length + 1,
+                        ),
+                      )
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 
-  _header(BuildContext context, DetailState hs) {
+  _header(BuildContext context, IndonesiaState hs) {
     return Center(
       child: Container(
         margin: EdgeInsets.all(32.0),
@@ -197,7 +186,7 @@ class DetailView extends StatelessWidget {
         ));
   }
 
-  _item(DataProvince dataProvince, DetailState hs) {
+  _item(DataProvince dataProvince, IndonesiaState hs) {
     return Container(
       decoration: BoxDecoration(
           color: AppTheme.colors['biru_box'],

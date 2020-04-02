@@ -1,35 +1,41 @@
 /*
  * corona
  * home_view.dart
- * Created by Cong Fandi on 15/3/2020
+ * Created by Cong Fandi on 2/4/2020
  * email : congfandi@gmail.com
  * Copyright © 2020 Cong Fandi. All rights reserved.
  *
  */
 
 import 'package:corona/app/app_theme.dart';
-import 'package:corona/helper/contry_to_code.dart';
-import 'package:corona/helper/convert_price.dart';
-import 'package:corona/models/data_country/DataCountry.dart';
-import 'package:corona/providers/home_state.dart';
+import 'package:corona/providers/indonesia_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => HomeState(),
-      child: Consumer<HomeState>(builder: (context, hs, _) {
-        return Scaffold(
-          body: _backGround(context, hs),
-        );
-      }),
-    );
-  }
+  final List<HomeMenu> _listMenu = [
+    new HomeMenu(
+        icon: 'assets/icons/pantau.png', name: 'Pantau', routeName: '/pantau'),
+    new HomeMenu(
+        icon: 'assets/icons/artikel.png',
+        name: 'Artikel',
+        routeName: '/artikel'),
+    new HomeMenu(
+        icon: 'assets/icons/penanganan.png',
+        name: 'Penanganan',
+        routeName: '/penanganan'),
+    new HomeMenu(
+        icon: 'assets/icons/rujukan.png',
+        name: 'RS Rujukan',
+        routeName: '/rujukan'),
+    new HomeMenu(
+        icon: 'assets/icons/situs_resmi.png',
+        name: 'Situs Resmi',
+        routeName: '/situs_resmi'),
+    new HomeMenu(icon: 'assets/icons/faq.png', name: 'FAQ', routeName: '/faq')
+  ];
 
-  _backGround(BuildContext context, HomeState hs) {
+  _backGround(BuildContext context, IndonesiaState hs) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -40,43 +46,61 @@ class HomeView extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Image.asset(
-              'assets/background.jpeg',
+              'assets/images/background.png',
               fit: BoxFit.fill,
             ),
           ),
-          hs.loadingVirus
-              ? Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : _body(context, hs),
+          _body(context, hs),
         ],
       ),
     );
   }
 
-  _body(BuildContext context, HomeState hs) {
+  _body(BuildContext context, IndonesiaState hs) {
     return RefreshIndicator(
-      onRefresh: ()=> hs.getAllCountry(),
-      child: Column(
-        children: <Widget>[
-          _header(context, hs),
-          Container(
-            margin: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                color: AppTheme.colors['putih'],
-                border: Border.all(
-                  color: AppTheme.colors['putih'],
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            height: MediaQuery.of(context).size.height - 250,
-            child: ListView.builder(
-              itemBuilder: (c, i) => i == 0
-                  ? _title()
-                  : _item(
-                      hs.listCoronaByCountry[i - 1].attributes, hs, context),
-              itemCount: hs.listCoronaByCountry.length + 1,
+      onRefresh: () => hs.getDetail(),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: Column(
+              children: <Widget>[
+                _header(context, hs),
+                Container(
+                  margin: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      color: AppTheme.colors['putih'],
+                      border: Border.all(
+                        color: AppTheme.colors['putih'],
+                      ),
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          topLeft: Radius.circular(20))),
+                  height: MediaQuery.of(context).size.height - 300,
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      Positioned(
+                        top: 0,
+                        child: Container(
+                          height: 500,
+                          width: MediaQuery.of(context).size.width - 64,
+                          child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 32,
+                                    childAspectRatio: 0.7,
+                                    mainAxisSpacing: 8),
+                            itemBuilder: (c, i) => _menuItem(_listMenu[i], c),
+                            itemCount: _listMenu.length,
+                          ),
+                        ),
+                      ),
+                      Image.asset('assets/images/footer.png')
+                    ],
+                  ),
+                )
+              ],
             ),
           )
         ],
@@ -84,7 +108,27 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  _header(BuildContext context, HomeState hs) {
+  _menuItem(HomeMenu homeMenu, BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, homeMenu.routeName);
+      },
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Image.asset(homeMenu.icon),
+            Padding(padding: EdgeInsets.only(top: 4)),
+            Text(
+              homeMenu.name,
+              style: TextStyle(color: AppTheme.colors['biru']),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  _header(BuildContext context, IndonesiaState hs) {
     return Center(
       child: Container(
         margin: EdgeInsets.all(32.0),
@@ -93,9 +137,7 @@ class HomeView extends StatelessWidget {
           children: <Widget>[
             Padding(padding: EdgeInsets.only(top: 32)),
             Text(
-              hs.pinnedCountry == null
-                  ? "wait..."
-                  : hs.pinnedCountry.countryRegion.toUpperCase(),
+              'INDONESIA',
               style: TextStyle(
                   color: AppTheme.colors['putih'],
                   fontWeight: FontWeight.bold,
@@ -105,9 +147,9 @@ class HomeView extends StatelessWidget {
               onPressed: null,
               borderSide: BorderSide(width: 4),
               child: Text(
-                hs.pinnedCountry == null
-                    ? "wait.."
-                    : "${ConvertPrice(hs.pinnedCountry.confirmed).getIdr()} Kasus",
+                hs.loadIndonesia
+                    ? "loading.."
+                    : "${hs.indonesia.positif} Kasus",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15,
@@ -136,9 +178,9 @@ class HomeView extends StatelessWidget {
                       ),
                       Padding(padding: EdgeInsets.only(left: 8)),
                       Text(
-                        hs.pinnedCountry == null
-                            ? "loading.."
-                            : "Sembuh : ${ConvertPrice(hs.pinnedCountry.recovered).getIdr()}",
+                        hs.loadIndonesia
+                            ? "loading..."
+                            : "Sembuh : ${hs.indonesia.sembuh}",
                         style: TextStyle(
                             color: AppTheme.colors['putih'],
                             fontWeight: FontWeight.bold,
@@ -158,9 +200,9 @@ class HomeView extends StatelessWidget {
                       ),
                       Padding(padding: EdgeInsets.only(left: 8)),
                       Text(
-                        hs.pinnedCountry == null
-                            ? "loading.."
-                            : "Meninggal : ${ConvertPrice(hs.pinnedCountry.deaths).getIdr()}",
+                        hs.loadIndonesia
+                            ? "loading..."
+                            : "Meninggal : ${hs.indonesia.meninggal}",
                         style: TextStyle(
                             color: AppTheme.colors['putih'],
                             fontWeight: FontWeight.bold,
@@ -179,70 +221,17 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  _title() {
-    return Container(
-        margin: EdgeInsets.only(left: 16, bottom: 16),
-        child: Text(
-          "NEGARA TERDAMPAK",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        ));
+  @override
+  Widget build(BuildContext context) {
+    final IndonesiaState indonesiaState = Provider.of<IndonesiaState>(context);
+    return _backGround(context, indonesiaState);
   }
+}
 
-  _item(DataCountry country, HomeState hs, BuildContext context) {
-    return InkWell(
-      onTap: () {
-//        Navigator.push(
-//            context, MaterialPageRoute(builder: (_) => DetailView(hs,virus)));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            color: AppTheme.colors['biru_box'],
-            border: Border.all(
-              color: AppTheme.colors['biru_box'],
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        padding: EdgeInsets.only(right: 8, left: 8),
-        margin: EdgeInsets.only(top: 8, left: 16, right: 16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.network(
-                'https://www.countryflags.io/${new CountryToCode(country.countryRegion).getCode().toLowerCase()}/flat/64.png'),
-            Padding(padding: EdgeInsets.only(left: 16)),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    country.countryRegion ?? "",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: AppTheme.colors['putih'],
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "${ConvertPrice(country.confirmed).getIdr()} Kasus",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: AppTheme.colors['putih'],
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-                icon: Icon(
-                  Icons.remove_red_eye,
-                  color: hs.pinnedCountry == country
-                      ? AppTheme.colors['putih']
-                      : AppTheme.colors['abu_abu'],
-                ),
-                onPressed: () {
-                  hs.setPinnedVirus(country);
-                })
-          ],
-        ),
-      ),
-    );
-  }
+class HomeMenu {
+  String icon;
+  String name;
+  String routeName;
+
+  HomeMenu({this.icon, this.name, this.routeName});
 }

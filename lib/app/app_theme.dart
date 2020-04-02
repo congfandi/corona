@@ -25,6 +25,6 @@ class AppTheme {
     "transparant": Colors.transparent,
     "black_cover": Colors.black12,
     "putih": Colors.white,
-    "ungu": new Color(0xff8501F9)
+    "ungu": new Color(0xff8501F9),
   });
 }
