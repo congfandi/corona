@@ -193,6 +193,7 @@ class HomeView extends StatelessWidget {
                 ),
                 Expanded(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Icon(
                         Icons.group,
