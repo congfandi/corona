@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "699848784058",
+    "firebase_url": "https://pantau-corona-8843f.firebaseio.com",
+    "project_id": "pantau-corona-8843f",
+    "storage_bucket": "pantau-corona-8843f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699848784058:android:6abda2a3bb10286f2aea83",
+        "android_client_info": {
+          "package_name": "com.thengoding.corona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699848784058-bhe0g3pic78ufdmvf273kckdcukqekm5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thengoding.corona",
+            "certificate_hash": "feb452a6b9cbf9d28750c461278c7f21dd19f64c"
+          }
+        },
+        {
+          "client_id": "699848784058-p66e19tnovb4nng1idt9m8n1lqnhfo74.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO0aZKRePOtIOI-29XBw0dVCquUvWpi68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699848784058-p66e19tnovb4nng1idt9m8n1lqnhfo74.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

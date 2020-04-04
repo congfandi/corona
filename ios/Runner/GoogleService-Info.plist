@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>699848784058-0ofpanojohej5aetqpgfrij6t9u37rpg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.699848784058-0ofpanojohej5aetqpgfrij6t9u37rpg</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>699848784058-bhe0g3pic78ufdmvf273kckdcukqekm5.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBpWJjeUHuV-SCYmaTkpqxyJgPfeZdnP5U</string>
+	<key>GCM_SENDER_ID</key>
+	<string>699848784058</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.thengoding.corona</string>
+	<key>PROJECT_ID</key>
+	<string>pantau-corona-8843f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pantau-corona-8843f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:699848784058:ios:a3598d7935938ba12aea83</string>
+	<key>DATABASE_URL</key>
+	<string>https://pantau-corona-8843f.firebaseio.com</string>
+</dict>
+</plist>

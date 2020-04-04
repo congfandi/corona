@@ -17,8 +17,10 @@ import 'package:flutter/material.dart';
 
 class AllCountryState with ChangeNotifier {
   bool loadingVirus = true;
-  DataCountry pinnedCountry;
   final ApiClient _apiClient = new ApiClient();
+  int totalConfirm = 0;
+  int totalDeath = 0;
+  int totalRecovered = 0;
 
   AllCountryState() {
     getAllCountry();
@@ -27,6 +29,9 @@ class AllCountryState with ChangeNotifier {
   List<DataCorona> listCoronaByCountry = new List();
 
   Future<List<DataCorona>> getAllCountry() async {
+    totalConfirm = 0;
+    totalDeath = 0;
+    totalRecovered = 0;
     _apiClient.getFromKawal(ApiDb.ALL_COUNTRY, (status, message, jsonResponse) {
       if (status) {
         AllCountryResponse _response =
@@ -34,21 +39,14 @@ class AllCountryState with ChangeNotifier {
         this.listCoronaByCountry = _response.dataCorona;
         loadingVirus = false;
         listCoronaByCountry.forEach((data) {
-          DbHelper().getCountry().then((code) {
-            if (code == data.attributes.objectId)
-              setPinnedVirus(data.attributes);
-          });
+          totalConfirm += data.attributes.confirmed;
+          totalDeath += data.attributes.deaths;
+          totalRecovered += data.attributes.recovered;
         });
       }
       notifyListeners();
       return;
     });
     return listCoronaByCountry;
-  }
-
-  setPinnedVirus(DataCountry dataCountry) {
-    this.pinnedCountry = dataCountry;
-    DbHelper().saveCountry(dataCountry.objectId);
-    notifyListeners();
   }
 }

@@ -10,11 +10,14 @@
 import 'package:corona/app/app_theme.dart';
 import 'package:corona/helper/convert_price.dart';
 import 'package:corona/models/data_province/data_province.dart';
+import 'package:corona/models/province_flag.dart';
 import 'package:corona/providers/indonesia_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class IndonesiaView extends StatelessWidget {
+  final ProvinceFlag _provinceFlag = new ProvinceFlag();
+
   @override
   Widget build(BuildContext context) {
     final IndonesiaState indonesiaState = Provider.of<IndonesiaState>(context);
@@ -194,12 +197,15 @@ class IndonesiaView extends StatelessWidget {
             color: AppTheme.colors['biru_box'],
           ),
           borderRadius: BorderRadius.all(Radius.circular(8))),
-      padding: EdgeInsets.only(right: 8, left: 8),
+      padding: EdgeInsets.all(8),
       margin: EdgeInsets.only(top: 8, left: 16, right: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image.network('https://www.countryflags.io/id/flat/64.png'),
+          Image.network(
+            _provinceFlag.flag(dataProvince.provinsi),
+            height: 40,
+          ),
           Padding(padding: EdgeInsets.only(left: 16)),
           Expanded(
             child: Column(
@@ -212,12 +218,25 @@ class IndonesiaView extends StatelessWidget {
                       color: AppTheme.colors['putih'],
                       fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  "${ConvertPrice(dataProvince.kasusPosi).getIdr()} Kasus",
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.colors['putih'],
-                      fontWeight: FontWeight.bold),
+                Padding(padding: EdgeInsets.only(top: 8)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "${ConvertPrice(dataProvince.kasusPosi).getIdr()} Kasus",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.colors['putih'],
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "${ConvertPrice(dataProvince.kasusSemb).getIdr()} Sembuh",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.colors['putih'],
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ],
             ),

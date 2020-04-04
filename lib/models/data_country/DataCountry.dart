@@ -36,8 +36,6 @@ class DataCountry {
       countryRegion: json['Country_Region'],
       deaths: json['Deaths'],
       lastUpdate: json['Last_Update'],
-      lat: double.parse(json['Lat'].toString()),
-      longi: double.parse(json['Long_'].toString()),
       objectId: json['OBJECTID'],
       recovered: json['Recovered'],
     );

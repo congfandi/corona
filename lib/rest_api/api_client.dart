@@ -27,4 +27,19 @@ class ApiClient {
       }
     });
   }
+
+  get(
+      {@required String url,
+      ValueChanged callback(
+          bool status, String message, Map<String, dynamic> map)}) async {
+    await http.get(url).then((response) {
+      if (response.statusCode == 2) {
+        callback(true, 'request done!', jsonDecode(response.body));
+      } else {
+        callback(false, 'Error with Status Code ${response.statusCode}', null);
+      }
+    }).catchError((err) {
+      callback(false, err.toString(), null);
+    });
+  }
 }

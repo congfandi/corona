@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 class HomeView extends StatelessWidget {
   final List<HomeMenu> _listMenu = [
     new HomeMenu(
-        icon: 'assets/icons/pantau.png', name: 'Pantau', routeName: '/pantau'),
+        icon: 'assets/icons/pantau.png', name: 'Pantau', routeName: '/chart'),
     new HomeMenu(
         icon: 'assets/icons/artikel.png',
         name: 'Artikel',
@@ -82,7 +82,7 @@ class HomeView extends StatelessWidget {
                       Positioned(
                         top: 0,
                         child: Container(
-                          height: 500,
+                          height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width - 64,
                           child: GridView.builder(
                             gridDelegate:
@@ -114,6 +114,8 @@ class HomeView extends StatelessWidget {
         Navigator.pushNamed(context, homeMenu.routeName);
       },
       child: Container(
+        width: MediaQuery.of(context).size.width / 3 - 100,
+        height: MediaQuery.of(context).size.width / 3 - 100,
         child: Column(
           children: <Widget>[
             Image.asset(homeMenu.icon),

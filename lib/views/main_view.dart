@@ -7,6 +7,7 @@
  *
  */
 
+import 'package:corona/app/app_theme.dart';
 import 'package:corona/providers/main_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,12 +18,13 @@ class MainView extends StatelessWidget {
     final MainState ms = Provider.of<MainState>(context);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: AppTheme.colors['biru'],
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
           BottomNavigationBarItem(
               icon: Icon(Icons.flag), title: Text("Indonesia")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.show_chart), title: Text("Statistik")),
+              icon: Icon(Icons.language), title: Text("Dunia")),
         ],
         onTap: ms.setPage,
         currentIndex: ms.currentPage,

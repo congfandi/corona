@@ -23,4 +23,6 @@ class ApiDb {
   static const String ALL_INDO_PROVINCE =
       "https://api.kawalcorona.com/indonesia/provinsi/";
   static const String INDONESIA = "https://api.kawalcorona.com/indonesia";
+  static const String CHART =
+      "https://services5.arcgis.com/VS6HdKS0VfIhv8Ct/arcgis/rest/services/Statistik_Perkembangan_COVID19_Indonesia/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json";
 }
