@@ -7,20 +7,19 @@
  *
  */
 
-import 'package:corona/app/app_theme.dart';
 import 'package:corona/providers/all_country_state.dart';
 import 'package:corona/providers/chart_state.dart';
 import 'package:corona/providers/home_state.dart';
 import 'package:corona/providers/indonesia_state.dart';
+import 'package:corona/providers/login_state.dart';
 import 'package:corona/providers/main_state.dart';
 import 'package:corona/views/chart_view.dart';
+import 'package:corona/views/login_view.dart';
 import 'package:corona/views/main_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:provider/provider.dart';
-import 'package:corona/views/all_counrty_view.dart';
 import 'package:corona/views/article_view.dart';
-import 'package:corona/views/faq_view.dart';
 import 'package:corona/views/penanganan_view.dart';
 import 'package:corona/views/resmi_view.dart';
 import 'package:corona/views/rujukan_view.dart';
@@ -38,6 +37,7 @@ class MyApp extends StatelessWidget {
             title: new Text("FAQ"),
           ),
         ),
+    "login": (_) => LoginView()
   };
 
   @override
@@ -49,10 +49,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ChartState()),
         ChangeNotifierProvider(create: (_) => IndonesiaState()),
         ChangeNotifierProvider(create: (_) => MainState()),
+        ChangeNotifierProvider(create: (_) => LoginState()),
       ],
       child: MaterialApp(
         routes: routes,
-        title: 'Pantau Corona',
+        title: 'PANTAU CORONA',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
