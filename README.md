@@ -1,6 +1,15 @@
 # corona
 
-This app for showing corona virus 2020
+This app for showing corona virus 2020, Build from flutter framework.
+
+## Home
+![home](screenshot/dunia.png)
+
+## Indonesia
+![home](screenshot/indonesia.png)
+
+## World
+![home](screenshot/dunia.png)
 
 ## Corona Virus Data
 
